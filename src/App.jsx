@@ -17,8 +17,7 @@ const SEED_DATA = [
   { id: "s12", question: "Will the NBA Finals go to 7 games in 2025?", slug: "nba-finals-7-games-2025", yes: 0.43, no: 0.50, sum: 0.93, profitPct: 4.84, hasArb: true, liquidity: 33000, volume: 14000 },
 ].sort((a, b) => b.profitPct - a.profitPct);
 
-const CORS_PROXY = "https://corsproxy.io/?";
-const POLY_API = "https://gamma-api.polymarket.com/markets?active=true&closed=false&limit=100&order=volume&ascending=false";
+const API_URL = "/api/markets";
 
 function processMarkets(data) {
   return data
@@ -65,7 +64,7 @@ export default function App() {
     setLoading(true);
     setLiveError(null);
     try {
-      const res = await fetch(CORS_PROXY + encodeURIComponent(POLY_API));
+      const res = await fetch(API_URL);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       const processed = processMarkets(data);
@@ -146,7 +145,7 @@ export default function App() {
 
       {liveError && (
         <div style={{ background: "rgba(245,158,11,.06)", borderBottom: "1px solid rgba(245,158,11,.2)", padding: "7px 20px", fontSize: 11, color: "#f59e0b", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 6 }}>
-          <span>⚠ Live API unavailable — showing demo data. Deploy to Vercel for real-time feed.</span>
+          <span>⚠ API error — showing demo data.</span>
           <code style={{ color: "#6b4a10", fontSize: 10 }}>{liveError}</code>
         </div>
       )}
@@ -234,7 +233,7 @@ export default function App() {
       </div>
 
       <div style={{ borderTop: "1px solid #0d2e1a", padding: "9px 20px", display: "flex", justifyContent: "space-between", fontSize: 10, color: "#1a6635" }}>
-        <span>SOURCE: {dataSource === "live" ? "POLYMARKET GAMMA API // LIVE" : "DEMO DATA — deploy locally for live feed"}</span>
+        <span>SOURCE: {dataSource === "live" ? "POLYMARKET GAMMA API // LIVE" : "DEMO DATA"}</span>
         <span>NOT FINANCIAL ADVICE // DYOR</span>
       </div>
     </div>
